@@ -3,6 +3,8 @@ package com.graphql.models;
 public class Book {
         String id;
         String name;
+        Author author;
+        Integer pageCount;
 
     public Book(String id, String name, Integer pageCount, Author author) {
         this.id = id;
@@ -42,7 +44,4 @@ public class Book {
     public void setAuthor(Author author) {
         this.author = author;
     }
-
-    Integer pageCount;
-        Author author;
 }

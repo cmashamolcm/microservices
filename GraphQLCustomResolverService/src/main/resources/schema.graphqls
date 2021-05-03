@@ -1,7 +1,13 @@
 type Query{
     bookById(id: String): Book
+    author(name: String): Author
 }
-
+type Mutation{
+    createBook(name: String, author: String, pageCount: Int): Book!
+}
+ type Subscription{
+     book: Book!
+ }
 
 type Book{
     id: String

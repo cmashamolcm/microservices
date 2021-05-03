@@ -1,0 +1,10 @@
+#If this mapping is not there, default url will be take. /graphql
+graphql:
+  servlet:
+    mapping: /graphql
+    enabled: true
+    corsEnabled: true
+    #have to enable subscription websockets. Else, error comes as Could not connect to websocket endpoint ws://localhost:8080/graphql
+    subscriptions:
+      websocket:
+        path: /graphql

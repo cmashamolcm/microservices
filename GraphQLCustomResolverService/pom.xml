@@ -43,6 +43,12 @@
             <version>5.2.4</version>
         </dependency>
 
+        <!--For subscription publishers-->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

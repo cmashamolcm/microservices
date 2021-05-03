@@ -1,8 +1,9 @@
 package com.graphql.models;
 
 public class Author {
-    public Author(String id) {
+    public Author(String id, String firstName) {
         this.id = id;
+        this.firstName = firstName;
     }
 
     String id;

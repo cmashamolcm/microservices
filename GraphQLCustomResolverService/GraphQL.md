@@ -327,3 +327,8 @@ Note:
    
 Only when GraphQLSchema is enabled as bean, then only /graphql endpoint gets enabled.
 
+Note:
+
+If we are not defining a resolver for a subtype and trying to fetch the data through a type which refers to it, error comes while querying that subtype resolver is not there.
+Eg: BookQueryResolver needs an AuthorResolver if we are trying to fetch Book(id, name, author). But no error comes if we need Book(id, name).
+

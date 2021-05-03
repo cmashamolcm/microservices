@@ -1,0 +1,23 @@
+# Write your query or mutation here
+{
+  bookById(id: "book-1"){
+  	name
+    id
+    pageCount
+    author{
+      id
+      firstName
+    }
+	}
+}
+
+mutation{
+  createBook(name :"My Fav Book", author: "Asha", pageCount: 1000){
+    name
+    id
+    author{
+      firstName
+      id
+    }
+  }
+}
