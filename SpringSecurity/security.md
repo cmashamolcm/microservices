@@ -57,3 +57,10 @@ Notes:
 7. When we configure UserDetailsService with InMemoryUserDetailsManager, default noops encoder works. Either we have to pass {noop} in password we configure or
    have to explicitly create an encoder from PasswordEncoderFactories to get rid of the issues of "no key found for null" kind of errors.
 8. @Id is mandatory in a model class. Else, it will give error.
+   When we map User to List of Authorities in JPA,
+   have to specify
+
+        @OneToMany(fetch=FetchType.EAGER)//-----if not giving this, LazyInitialization comes.The reason is; we are trying to fetch from authorities but outside session it's used in UserDetailsService. So, this error comes.
+        @JoinColumn(name="username")//---since primary key of Authority is different, if we are not specifying it, error comes as foreign key mapping is to authority.username.
+        public List<Authority> authorities;
+9.
