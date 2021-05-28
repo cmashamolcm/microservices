@@ -1,12 +1,14 @@
 HTTPS:
 1. Hyper Text Transfer Protocol -Secure
-2. Extension of HTTP protocol, which is an application layer protocol
+2. Extension of HTTP protocol, which is an application layer protocol.
 3. It is encrypted with TLS(Transport Layer Security) and formerly SSL(Secure Socket Layer).
 4. It's based certificate authorization
 5. A public password can be created only by domain owners. So, it's secure
 6. If I am <b>encrypting</b> a message with my <b>public key</b>, it can be <b>decrypted</b> only by my <b>private key</b>
 7. If <b>somebody has my public key</b>, they can <b>verify my signature</b> and ensure that it's send from me or somebody having my peivate key access.
-
+8. Http is not using any encryption but plain text whereas Https uses SSL/ TLS certificate encryption.
+9. Asymmetric encryption is using public and private keys whereas symmetric uses same key for encryption and decryption.
+10. TLS uses asymmetric and hence HTTP2 also.
 
 ### Consider our gmail id as public key and password to gmail account is private key.
 ### Anyone who know my mail id can send me a message as they are holding my public key.

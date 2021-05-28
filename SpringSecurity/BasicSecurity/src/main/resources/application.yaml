@@ -1,0 +1,6 @@
+##---Enable if default custom user credentials are to be used.
+##spring:
+##  security:
+##    user:
+##      name: asha
+##      password: asha123

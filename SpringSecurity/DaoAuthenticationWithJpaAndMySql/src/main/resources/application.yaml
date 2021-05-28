@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_1
+    username: user
+    password: password
+    initialization-mode: always
+    schema: classpath:/schema.sql
+    data: classpath:/data.sql
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+
+#initialization-mode: required to make .sql file execution enabled for non-embedded data sources as well. It's enabled only for embedded after springboot 2.0
+#if this is not set to none and set to create etc, hibernate will try to generate DLL from model classes. If it's set null, JPA will take care of DLL from .sql files instead of Hibernate.
