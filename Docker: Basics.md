@@ -122,9 +122,16 @@
                                                                                                                                                                                     
                                                                                                                                                                                     
                                                                                                                                                                                     
-adsasdasdsad
+      13. Storage Volumes:
+      
+            The data needs to be stored somewhere for our apps runnng in containers.
+            <b><u>Overlay2</u></b> is a mechanism to store data from containers.
 
-
+      14. Containerize Apps 2 ways:
+            Write app inside container itself
+            or
+            Write and dockerize app
+            
 
 
 sadasdsadsadsa
