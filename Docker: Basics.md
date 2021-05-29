@@ -105,16 +105,26 @@
                 |       |                                                                                                 |
                 |       |       ------------------------------------------------                                          |
                 |       |       |  docker client                                                                          |
-    user--------------->|       |       |                   |--------------->-via REST calls|                             |
+            user--------------->|        |--------------->-via REST calls         |                                                |
                 |       |       |                                                 |                                       |
-                |       |                                                         |------------>Docker Daemon   --------------------contacts------->containerd (the real container daemon which manages containerlifecycles) 
+                |       |                                                         |------------>Docker Daemon   --------------------contacts------->containerd (the                 |       |                                                                                                                         real container                   |       |                                                                                                                      daemon which                         |       |                                                                                                                                 manages                   |       |                                                                                                                     containerlifecycles) 
                 |       |                                                                                                 |                           |    | 
-                |       |                                                                                                 |                           |    |contacts
+                |       |                                                                                                 |                           |                             |       |                                                                                                                               |contacts
                 |       |                                                                                                 |                           |    v 
-                |       |--------------------------------------------------------------------------------------------------                           |    runc (which is actually managing the individual container and its life cycle)
-                |                                                                                                                                     |-----------------------------
-                                                                                                                                                      v                             |
-                                                                                                                                                    runc for container 1            |
-                                                                                                                                                                                    |
-                                                                                                                                                                                    v
-                                                                                                                                                                                    runc for container n
+                |       |--------------------------------------------------------------------------------------------------                           |    runc                                                                                                                                                                 (which                                                                                                                                              is actually managing                                                                                                                                                the individual                                                                                                                                                  container and its life                                                                                                                                                 |             cycle)
+                                                                                                                                            |          |
+                                                                                                                                            |          v                                                                                                                                                       | 
+                                                                                                                                            |         runc for                                                                                                                                                 |         container 1                                                                                                                                               |
+                                                                                                                                            v
+                                                                                                                                                                                                                                                                                                            runc for container n
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+adsasdasdsad
+
+
+
+
+sadasdsadsadsa
