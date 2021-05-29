@@ -63,4 +63,4 @@ Notes:
         @OneToMany(fetch=FetchType.EAGER)//-----if not giving this, LazyInitialization comes.The reason is; we are trying to fetch from authorities but outside session it's used in UserDetailsService. So, this error comes.
         @JoinColumn(name="username")//---since primary key of Authority is different, if we are not specifying it, error comes as foreign key mapping is to authority.username.
         public List<Authority> authorities;
-9.
+9. When UserDetailsService is added, automatic password generation default behavior stops.
