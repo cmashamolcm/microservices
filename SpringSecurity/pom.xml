@@ -12,6 +12,8 @@
         <module>BasicSecurity</module>
         <module>DaoAuthentication</module>
         <module>DaoAuthenticationWithJpaAndMySql</module>
+        <module>LdapAuthentication</module>
+        <module>jwtSecurity</module>
     </modules>
 
     <parent>

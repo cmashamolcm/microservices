@@ -174,4 +174,194 @@
     * There is no ready-made AuthenticationProvider to plug in easily for external database authentication with jpa.
     * We have to use default AuthenticationProvider. But we can customize the UserDetailsService to contact the identity provider ie; database.
     * <b>If we want to have a custom authentication implementation, may be we can use default AuthenticationProvider and plug our own custom UserDetailsService.</b>
+
+13. LDAP Authentication:
+    * LDAP is a protocol
+    * Lightweight Directory Access Protocol
+    * It provides easy way to store and access information such as organization hierarchy, employee details etc in tree structure.
+    * It provides directory access through IP protocol
+    * Add below dependencies.
+        
+
+        <!--This below dependency adds ldap-core as well. But 2.3.3 version is not ok with jdk16. So, use 2.3.4+ explicitly. Else error comes as java.naming is not accessible etc.-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+            <version>2.3.4.RELEASE</version>
+        </dependency>
+        <!--This below dependency enables embedded ldap for dev test-->
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+        </dependency>
+
+   * LDAP spring boot dependencies helps us to work with LDAP just like a datasource. 
+   * It has its own repo, entities etc.
+   * The file with .ldif is called <b>ldap data interchange format</b>
+   * This holds the basic schema of a ldap configuration.
+   * In simple use case, can use below authorization config.
+     
+
+     @Override
+     protected void configure(HttpSecurity http) throws Exception {
+     http
+     .authorizeRequests()
+     .anyRequest().fullyAuthenticated()
+     .and()
+     .formLogin();
+     }
+   * But in case, we want to have role based access, either have to use implementation of LdapAuthoritiesPopulator, which can fetch roles based on username from database etc.
+   * It has a method getGrantedAuthorities(username).
+
+14. JWT Based Authentication:
+    * Json Web Token(pronounced as JAWT)
+    * Extensively using in microservice development
+    * Http is stateless
+    * Authentication is per request. But it is annoying from a user perspective to enter credentials every time.
+    * Tokens came into picture to solve this issue.
+    * 2 types:
+        * Session Tokens (maintains principal in session scope instead of request thread's  Thread local).
+        * JSON Web Token
+    * How is token based authentication working?
+
+
+<b>With Session Tokens: Session ID + Cookies</b>
+
+        Client browser                                                                          Web App
+            |                                                                                     |                  
+            |-----------------------------------------------------login-------------------------->|
+            |                                                                                     |-----for successful authentication, generate a session which has all user info.  just like a ticket
+            |<-----------------------------RETURN SESSIONID on success placing it in cookies<-----| 
+            |     just like ticket id which can be told to web app again to verify the same user  |
+            |                                                                                     |
+            |------------next request's header containing cookie holding valid session ID-------->|------validate with session id by doing loopup in session log and proceed on success.
+
+
+   * But the problem here is, this session log is in single web app. It is not shared. So, in microservice architecture where multiple services are there, this won't work unless we put it in a shared cache like Redis.
+   * Else, one way is to use <b>"sticky sessions"</b> approach that makes load balancer intelligent enough so that it can route the calls with same session id to same service instance always.
+
+<b>With JWT Tokens: JSON object holding user details signed by web app</b>
+    * When we use session id approach, the problem is, web app side have to remember the session details.
+    * This creates issues when multiple services' comes into picture because it is stored in some specific location.
+    * It will be great of each request holds the session info fully.
+    * But we cannot trust the end user that they will send us valid session info to the web app.
+    * If after primary authentication, while sharing the session info, if authorittative signature is there, it will be trustworthy.
     
+
+        Session ID + Cookies = reference token(session token holding reference to user info)
+                client-----------------------login--------->validate user and collect details and create a tiket by front office person, strore it  
+                      <----------------ticket id------------
+
+                next time client visit----------ticket id---> retrieve ticket info by front office and validate
+                                      <---------serve the request----
+
+        JWT Token = Value Token (holding signed user info value):
+                client-----------------------login--------->validate user and collect details and create a tiket by front office person, send ticket info + authroty signature instead of storing 
+                      <-------signed ticket info as JSON-----------
+
+                next time client visit----------signed ticket info---> validate sign and verify user
+                                      <---------serve the request----
+
+15. How is this JWT token looks like?
+    
+    * It likes like below sample separted by "<b>.</b>". The payload will be JSON encoded in base64.
+    * Header is also base64 encoded. It holds type=JWT and algo to decode header.
+    * Signature adds strength to it as anybody can encode or decode the payload and header.
+    * But the signature is generated by the server/ web app and any change in payload or header will ensure that the signature will not match with the actual one while validating.  
+    * The reason is, signature is generated by the encryption of encoded header and encoded payload as well as a private key/ secret holding at server side.
+    * So, if an attacker changes payload and header, while validating the signature at server side, signature received and signature generated will mismatch and login fails.
+    
+    
+    
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.       --------header
+    eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.    ------payload
+    SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c     --------signature
+
+
+   * JWT Working:
+
+        
+            user-------------eneters credentials (login)------------------------->-----server validates
+            |                                                                               |
+            |                                                                               |  (valid user)  ------>gererate JAWT token        
+            |                                       if fails 401 comes                      |                            |
+    --------|<---------------send the JWT token-----<---------------------------------------|-------------<--------------|
+      store it in local storage                                                             |
+      or cookies                                                                            |
+            |                                                                               |
+            |--------------------send token in request header----------------->-------------|---------validate token------------------> Token validation Process
+            |                   Authorization : Bearer<space>JAWTToken                      |               |                                   [JWT Token = base64 encoded hhhhhhhhhheader.base64 encoded pppppppppayload.encoded or non-encoded sssssssssignature
+            |                                                                               |               |                                                   |       +        |                                                                      |
+            |<--------------------------------proper response for valid requests------------|---------------|                                                   v                v                                                                      |
+            |                                                                               |                                                                   apply private key / server side secret and encrypt to compute signature                 |
+                                                                                                                                                                                                                                    |                   |
+                                                                                                                                                                                                                                    |                   |
+                                                                                                                                                                                                                                    v        <=>        v
+                                                                                                                                                                                                                                If matches, success, else error 403         
+    Note: * Do not put sensitive info in JSWt payload as it can be decoded.
+          * If somebody gets the entire JWT token,they can reuse it if not changing anything in header or payload.
+          * So, have to be careful to use JWT with HTTPS and other safe mechanisms like OAuth.
+          * In session token, we could invalidate if a user logs out etc.
+          * Since there is nothing kept in server side, we can keep expiry time for each token for safety.
+          * For more safety, we can keep black listed tokens when a user logs out etc to avoid stealing of it.
+          * When we enter user role in config(HttpSecurity) method, it should not have ROLE_ as prefix.
+          * When we set UserDetails object, GantedAuthorities should be starting with ROLE_.
+ 
+   * Encoding vs Encryption:
+        * Encoding is convert from one format to another.
+        * Mainly if data send by one system is not acceptable format for other system, conversion is to be done.
+        * Encoding helps to reduce size, send data in a different format with the help of publicly available algorithms
+        
+        * Encryption is converting from one format to another with the help of a secret key.
+        * It can be treated as an advanced encoding
+        * This is to maintain secret between sender and receiver
+        * There are symmetric and asymmetric encryption
+        
+16. JWT Implementing in Spring boot Project:
+        * Add
+    
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>0.9.1</version>
+            </dependency>
+            <!--To get rid of java.lang.ClassNotFoundException: javax.xml.bind.DatatypeConverter while generating jwt token-->
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.4.0-b180830.0359</version>
+            </dependency>
+
+    
+   * Claims is a key-value pair which is holding any additional info to hold in a token.
+    
+   * Steps to set up authentication:
+     1. 
+        * Create /authenticate POST end point
+        * Validate username and password with AuthenticationManager
+        * If succeeds without exception
+        * use JwtUtil to generate token and send it as response.
+        * Note that we have to permitAll() for /authenticate
+        * AuthenticationManager bean have to be enabled in SecurityConfig with overridden authenticationManagerBean() method annotated with @bean.
+     2.
+        * Once the response of /authenticate gives jwt token,
+        * enable jwt token validation in each subsequent request
+        * Get token in Authorization header by intercepting the request - Via filter extending OncePerRequestOnceFilter class
+        * Validate token with Jwt secret
+        * Process request in new Filter and validate and store jwt token in security context.
+        * Add this filter before UserNamePasswordAuthenticationFilter by 
+            
+                http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/authenticate").permitAll()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //----- disabled session tokens and no state kept.
+                http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);//-----added new filter
+    
+        * Now, filter is added for all requests. Login works fine as well.
+        * Then call /authenticate POST method with valid credentials
+        * Taken the token and set it in header of next requests and send it.
