@@ -621,3 +621,4 @@ Drawback of SSO:
 Reference:
 1. https://www.codejava.net/frameworks/spring-boot/oauth2-login-with-github-example
 2. https://www.youtube.com/watch?v=CWiwpvpCrro
+3. https://spring.io/guides/tutorials/spring-boot-oauth2/
