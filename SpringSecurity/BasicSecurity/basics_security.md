@@ -616,3 +616,8 @@ Use;
 Drawback of SSO:
     1. Each time we have to do the validation with credentials as the app check sif currently user is logged in into resource server.
 
+ 
+
+Reference:
+1. https://www.codejava.net/frameworks/spring-boot/oauth2-login-with-github-example
+2. https://www.youtube.com/watch?v=CWiwpvpCrro
