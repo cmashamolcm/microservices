@@ -14,6 +14,8 @@
         <module>DaoAuthenticationWithJpaAndMySql</module>
         <module>LdapAuthentication</module>
         <module>jwtSecurity</module>
+        <module>SingleSignOnWithFacebook</module>
+        <module>SisngleSignOnWithGitHubWithOAuthClient</module>
     </modules>
 
     <parent>
