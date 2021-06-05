@@ -1,4 +1,13 @@
-HTTPS:
+###HTTP:
+1. Hyper Text Transfer Protocol
+2. Browser sends an http request (Eg: get index.html to load page)
+3. DNS Resolution in TCP/IP layer
+4. Request receives at serverside and responds with Http Response
+5. Loads the response (text or text/html)
+6. It is not encrypted. It's plain text format.
+7. Have header and body for request and response has header, body and status code.
+
+###HTTPS:
 1. Hyper Text Transfer Protocol -Secure
 2. Extension of HTTP protocol, which is an application layer protocol.
 3. It is encrypted with TLS(Transport Layer Security) and formerly SSL(Secure Socket Layer).
